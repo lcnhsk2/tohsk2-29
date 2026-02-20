@@ -1,0 +1,2 @@
+# tohsk2-29
+LCN HSK2 TO 29
