@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK Level 2 • Doraemon (H21329)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+        body {
+            font-family: 'Segoe UI', 'Comic Sans MS', 'Chalkboard', sans-serif;
+            background: linear-gradient(145deg, #6ec8f0 0%, #3b9bd6 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            margin: 0;
+            position: relative;
+            overflow-x: hidden;
+        }
+        .doraemon-bg {
+            position: fixed;
+            bottom: -20px;
+            right: -20px;
+            width: 280px;
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .kantong-ajaib {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 80px;
+            opacity: 0.4;
+            z-index: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-radius: 50px 50px 30px 30px;
+            box-shadow: 0 20px 40px rgba(0, 50, 80, 0.5), 0 0 0 4px #f5e56b, 0 0 0 8px #e03a3a;
+            padding: 30px 25px;
+            position: relative;
+            z-index: 10;
+            border: 3px solid white;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            background: #fef9d7;
+            padding: 15px 25px;
+            border-radius: 60px 60px 30px 30px;
+            border: 3px solid #e03a3a;
+            box-shadow: inset 0 -3px 0 #b33f3f;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            color: #2a6f9c;
+            text-shadow: 2px 2px 0 #f5e56b;
+            letter-spacing: 2px;
+        }
+        .doraemon-icon {
+            width: 70px;
+            height: 70px;
+            background: #1e90ff;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 5px 0 #0b4d7a;
+            position: relative;
+        }
+        .doraemon-icon::before {
+            content: "🐱";
+            font-size: 45px;
+            position: absolute;
+            top: 5px;
+            left: 8px;
+        }
+        .username-display {
+            font-size: 1.5rem;
+            background: #ffefc0;
+            padding: 10px;
+            border-radius: 40px;
+            margin-bottom: 10px;
+            border: 2px solid #f5a623;
+            text-align: center;
+        }
+        .timer-panel {
+            display: flex;
+            justify-content: space-between;
+            background: #2f5f8a;
+            padding: 12px 25px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            border: 3px solid #f5e56b;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            text-shadow: 2px 2px 0 #1d3e5e;
+        }
+        .timer-item {
+            background: #0e3d5e;
+            padding: 5px 20px;
+            border-radius: 40px;
+            box-shadow: inset 0 -3px 0 #0a2a3a;
+        }
+        .tab-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            border-radius: 60px 60px 20px 20px;
+            background: #b0d9f0;
+            border: 3px solid #1e90ff;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #1d3e5e;
+            box-shadow: 0 5px 0 #0b4d7a;
+        }
+        .tab.active {
+            background: #f5e56b;
+            border-color: #e03a3a;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 0 #b35f00;
+        }
+        .tab.completed {
+            background: #a5d6a5;
+            border-color: #2e7d32;
+        }
+        .question-box {
+            background: #fffbf0;
+            border-radius: 40px;
+            padding: 30px;
+            border: 4px solid #f5e56b;
+            box-shadow: 0 8px 0 #d4a017, inset 0 2px 10px #ffeeaa;
+            margin-bottom: 30px;
+        }
+        .question-text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #1e3b5c;
+            font-weight: 600;
+            background: #e6f3ff;
+            padding: 15px 20px;
+            border-radius: 30px;
+            border: 2px dashed #3b9bd6;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .option-item {
+            background: white;
+            border-radius: 50px;
+            padding: 12px 20px;
+            border: 3px solid #3b9bd6;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .option-item:hover {
+            background: #c2e4ff;
+            border-color: #e03a3a;
+            transform: scale(1.01);
+        }
+        .option-item input[type="radio"] {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #1e90ff;
+            border-radius: 50%;
+            outline: none;
+            transition: 0.1s;
+            cursor: pointer;
+            background: white;
+        }
+        .option-item input[type="radio"]:checked {
+            background: #e03a3a;
+            border-color: #e03a3a;
+            box-shadow: 0 0 0 3px #f5e56b;
+        }
+        .option-item label {
+            flex: 1;
+            cursor: pointer;
+            color: #1d3e5e;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+        .nav-btn {
+            background: #3b9bd6;
+            border: none;
+            font-size: 1.8rem;
+            font-weight: bold;
+            padding: 15px 30px;
+            border-radius: 50px;
+            color: white;
+            text-shadow: 2px 2px 0 #1d5a7a;
+            border-bottom: 6px solid #1d5a7a;
+            cursor: pointer;
+            flex: 1;
+            transition: 0.07s;
+        }
+        .nav-btn:active {
+            border-bottom-width: 2px;
+            transform: translateY(4px);
+        }
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .btn-preview {
+            background: #f5a623;
+            border: none;
+            font-size: 2rem;
+            font-weight: bold;
+            padding: 20px 30px;
+            border-radius: 60px;
+            color: white;
+            text-shadow: 2px 2px 0 #b35f00;
+            border-bottom: 8px solid #b35f00;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .btn-preview:active {
+            border-bottom-width: 2px;
+            transform: translateY(6px);
+        }
+        .modal-start {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 80, 130, 0.95);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+        .modal-card {
+            background: #fef9d7;
+            max-width: 500px;
+            width: 90%;
+            padding: 40px;
+            border-radius: 80px 80px 40px 40px;
+            border: 8px solid #f5e56b;
+            text-align: center;
+            box-shadow: 0 20px 0 #b35f00;
+        }
+        .modal-card h2 {
+            font-size: 3rem;
+            color: #e03a3a;
+            margin-bottom: 10px;
+        }
+        .modal-card p {
+            font-size: 1.5rem;
+            margin: 20px 0;
+            color: #1e3b5c;
+        }
+        .modal-card input {
+            width: 80%;
+            padding: 15px;
+            border-radius: 50px;
+            border: 3px solid #1e90ff;
+            font-size: 1.5rem;
+            text-align: center;
+            margin: 20px 0;
+            outline: none;
+            background: white;
+        }
+        .btn-start {
+            background: #1e90ff;
+            border: none;
+            font-size: 2.5rem;
+            padding: 15px 40px;
+            border-radius: 50px;
+            color: white;
+            border-bottom: 8px solid #0b4d7a;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .btn-start:active {
+            border-bottom-width: 2px;
+            transform: translateY(6px);
+        }
+        .laporan {
+            background: #e6f7ff;
+            border-radius: 40px;
+            padding: 25px;
+            border: 4px solid #f5e56b;
+            text-align: center;
+        }
+        .laporan h2 {
+            font-size: 2.5rem;
+            color: #e03a3a;
+        }
+        .laporan .skor {
+            font-size: 3rem;
+            background: #fff;
+            display: inline-block;
+            padding: 10px 40px;
+            border-radius: 60px;
+            margin: 20px;
+            border: 5px solid #1e90ff;
+        }
+        .detail {
+            display: flex;
+            justify-content: space-around;
+            font-size: 1.5rem;
+            margin: 30px 0;
+        }
+        .btn-ulang {
+            background: #f5a623;
+            border: none;
+            font-size: 2rem;
+            padding: 15px 30px;
+            border-radius: 50px;
+            color: white;
+            border-bottom: 6px solid #b35f00;
+            cursor: pointer;
+        }
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            color: #fff;
+            text-shadow: 2px 2px 0 #1e3b5c;
+        }
+        .progress-info {
+            text-align: center;
+            font-size: 1.2rem;
+            background: #ffe0a3;
+            border-radius: 30px;
+            padding: 8px;
+            margin-bottom: 15px;
+        }
+        .preview-grid {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #fff5d6;
+            border-radius: 30px;
+        }
+        .preview-item {
+            background: white;
+            border-radius: 30px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 15px solid;
+        }
+        .preview-item.correct {
+            border-left-color: #2e7d32;
+            background: #e8f5e9;
+        }
+        .preview-item.wrong {
+            border-left-color: #c62828;
+            background: #ffebee;
+        }
+        .preview-question {
+            font-weight: bold;
+        }
+        .preview-answer {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="kantong-ajaib">🔔🐱</div>
+    <div class="doraemon-bg">🐱🔔🐱🔔🐱</div>
+
+    <div class="container" id="mainContainer"></div>
+
+    <script>
+        (function() {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('copy', e => e.preventDefault());
+            document.addEventListener('cut', e => e.preventDefault());
+            document.addEventListener('paste', e => e.preventDefault());
+
+            // Data Listening (21-35) dengan stem buatan berdasarkan opsi
+            const rawListening = [
+                { no: 21, type: 'mc3', part: 'listening', question: '男：这个蛋糕多少钱？女：50块。男：太贵了。问：男的说蛋糕怎么样？', options: ['A 很贵', 'B 太小了', 'C 不太好吃'], answer: 'A' },
+                { no: 22, type: 'mc3', part: 'listening', question: '女：你怎么去学校？男：我坐出租车。问：男的去学校坐什么？', options: ['A 走路', 'B 坐船', 'C 坐出租车'], answer: 'C' },
+                { no: 23, type: 'mc3', part: 'listening', question: '男：我们住在哪个房间？女：309。问：他们住几号房？', options: ['A 309', 'B 406', 'C 503'], answer: 'A' },
+                { no: 24, type: 'mc3', part: 'listening', question: '女：你周末做什么？男：我想买自行车。问：男的要做什么？', options: ['A 跳舞', 'B 学习汉语', 'C 买自行车'], answer: 'C' },
+                { no: 25, type: 'mc3', part: 'listening', question: '男：医生说我应该多喝水。女：你要注意身体。问：医生建议什么？', options: ['A 多运动', 'B 多休息', 'C 多喝水'], answer: 'C' },
+                { no: 26, type: 'mc3', part: 'listening', question: '女：你在哪儿？男：我在饭店吃饭。问：男的在哪儿？', options: ['A 教室', 'B 饭店', 'C 商店'], answer: 'B' },
+                { no: 27, type: 'mc3', part: 'listening', question: '男：最近工作忙吗？女：不忙，我想去旅游。问：女的想做什么？', options: ['A 别说话', 'B 想去旅游', 'C 工作不忙'], answer: 'B' },
+                { no: 28, type: 'mc3', part: 'listening', question: '女：你妹妹在吗？男：她不在，她同学来了。问：谁来了？', options: ['A 她弟弟', 'B 她妹妹', 'C 她同学'], answer: 'C' },
+                { no: 29, type: 'mc3', part: 'listening', question: '男：我们去看电影吧。女：好，去电影院。问：他们要去哪儿？', options: ['A 公司', 'B 咖啡馆儿', 'C 电影院'], answer: 'C' },
+                { no: 30, type: 'mc3', part: 'listening', question: '女：你怎么没来打球？男：我生病了。问：男的为什么没来？', options: ['A 没时间', 'B 生病了', 'C 去打球了'], answer: 'B' },
+                { no: 31, type: 'mc3', part: 'listening', question: '男：我们几点见面？女：两点。问：他们几点见？', options: ['A 12:00', 'B 14:00', 'C 16:00'], answer: 'B' },
+                { no: 32, type: 'mc3', part: 'listening', question: '女：明天天气怎么样？男：会下雨。问：明天天气如何？', options: ['A 晴天', 'B 有雨', 'C 会下雪'], answer: 'B' },
+                { no: 33, type: 'mc3', part: 'listening', question: '男：请问医院在哪儿？女：在学校旁边。问：医院在哪儿？', options: ['A 医院后面', 'B 学校旁边', 'C 药店前面'], answer: 'B' },
+                { no: 34, type: 'mc3', part: 'listening', question: '女：谁做的饭？男：妈妈。问：谁做的饭？', options: ['A 女儿', 'B 妈妈', 'C 爸爸'], answer: 'B' },
+                { no: 35, type: 'mc3', part: 'listening', question: '男：你想吃什么？女：鱼。问：女的想吃什么？', options: ['A 鱼', 'B 鸡蛋', 'C 米饭'], answer: 'A' }
+            ];
+
+            // Data Reading (41-60) dari PDF
+            const rawReading = [
+                { no: 41, type: 'mc6', part: 'reading', question: '你来（ ）一下这个问题，好吗？', options: ['A 回答', 'B 件', 'C 姓', 'D 离', 'E 贵', 'F 身体'], answer: 'A' },
+                { no: 42, type: 'mc6', part: 'reading', question: '我觉得帮助人是一（ ）很快乐的事情。', options: ['A 回答', 'B 件', 'C 姓', 'D 离', 'E 贵', 'F 身体'], answer: 'B' },
+                { no: 43, type: 'mc6', part: 'reading', question: '多吃水果对（ ）好。', options: ['A 回答', 'B 件', 'C 姓', 'D 离', 'E 贵', 'F 身体'], answer: 'F' },
+                { no: 44, type: 'mc6', part: 'reading', question: '我（ ）王，叫王元元，大家可以叫我小王。', options: ['A 回答', 'B 件', 'C 姓', 'D 离', 'E 贵', 'F 身体'], answer: 'C' },
+                { no: 45, type: 'mc6', part: 'reading', question: '女：你家（ ）学校远吗？男：不远，坐公共汽车15分钟就到了。', options: ['A 回答', 'B 件', 'C 姓', 'D 离', 'E 贵', 'F 身体'], answer: 'D' },
+                { no: 46, type: 'tf', part: 'reading', question: '天阴了，可能快下雨了，你还要出去跑步吗？\n★ 外面已经下雨了。', options: ['√ 对', '× 错'], answer: '×' },
+                { no: 47, type: 'tf', part: 'reading', question: '爸爸明天早上9点下飞机，我们7点从家去机场就可以。\n★ 他们明天早上去要去机场。', options: ['√ 对', '× 错'], answer: '√' },
+                { no: 48, type: 'tf', part: 'reading', question: '这本书我读过，写得很有意思，我两天就看完了，有时间你也看看吧。\n★ 他觉得那本书不好看。', options: ['√ 对', '× 错'], answer: '×' },
+                { no: 49, type: 'tf', part: 'reading', question: '我是第一次来这儿，这儿太漂亮了，真希望我们能多住几天再走。\n★ 他很喜欢这里。', options: ['√ 对', '× 错'], answer: '√' },
+                { no: 50, type: 'tf', part: 'reading', question: '先生，这个电脑是我们店里卖得最好的，有好几个颜色。您看看，您喜欢什么颜色的？\n★ 买这个电脑的人很少。', options: ['√ 对', '× 错'], answer: '×' },
+                { no: 51, type: 'mc6', part: 'reading', question: '没有，我想下班后到火车站再看看。', options: ['A 我有点儿累，想早点儿睡觉。', 'B 这个白色的手机不错，还很便宜，就几百块钱。', 'C 小狗是去年哥哥送我的。', 'D 回家的票你买好了吗？', 'E 他在哪儿呢？你看见他了吗？', 'F 这本汉语书是谁的？怎么在我的桌子上？'], answer: 'D' },
+                { no: 52, type: 'mc6', part: 'reading', question: '那时候它还不满一岁。', options: ['A 我有点儿累，想早点儿睡觉。', 'B 这个白色的手机不错，还很便宜，就几百块钱。', 'C 小狗是去年哥哥送我的。', 'D 回家的票你买好了吗？', 'E 他在哪儿呢？你看见他了吗？', 'F 这本汉语书是谁的？怎么在我的桌子上？'], answer: 'C' },
+                { no: 53, type: 'mc6', part: 'reading', question: '上面有名字吗？', options: ['A 我有点儿累，想早点儿睡觉。', 'B 这个白色的手机不错，还很便宜，就几百块钱。', 'C 小狗是去年哥哥送我的。', 'D 回家的票你买好了吗？', 'E 他在哪儿呢？你看见他了吗？', 'F 这本汉语书是谁的？怎么在我的桌子上？'], answer: 'F' },
+                { no: 54, type: 'mc6', part: 'reading', question: '晚上我们去唱歌怎么样？', options: ['A 我有点儿累，想早点儿睡觉。', 'B 这个白色的手机不错，还很便宜，就几百块钱。', 'C 小狗是去年哥哥送我的。', 'D 回家的票你买好了吗？', 'E 他在哪儿呢？你看见他了吗？', 'F 这本汉语书是谁的？怎么在我的桌子上？'], answer: 'A' },
+                { no: 55, type: 'mc6', part: 'reading', question: '你少看了个零吧？那是6000多。', options: ['A 我有点儿累，想早点儿睡觉。', 'B 这个白色的手机不错，还很便宜，就几百块钱。', 'C 小狗是去年哥哥送我的。', 'D 回家的票你买好了吗？', 'E 他在哪儿呢？你看见他了吗？', 'F 这本汉语书是谁的？怎么在我的桌子上？'], answer: 'B' },
+                { no: 56, type: 'mc5', part: 'reading', question: '这个字我会写了，谢谢老师。', options: ['A 我是4月1日到北京的，快三个月了。', 'B 再给我来一杯牛奶吧。', 'C 我还没告诉她这件事。', 'D 他在那儿和孩子们踢足球呢。', 'E 不客气，还有不懂的吗？'], answer: 'E' },
+                { no: 57, type: 'mc5', part: 'reading', question: '你来中国多长时间了？', options: ['A 我是4月1日到北京的，快三个月了。', 'B 再给我来一杯牛奶吧。', 'C 我还没告诉她这件事。', 'D 他在那儿和孩子们踢足球呢。', 'E 不客气，还有不懂的吗？'], answer: 'A' },
+                { no: 58, type: 'mc5', part: 'reading', question: '那个穿红衣服的就是我儿子。', options: ['A 我是4月1日到北京的，快三个月了。', 'B 再给我来一杯牛奶吧。', 'C 我还没告诉她这件事。', 'D 他在那儿和孩子们踢足球呢。', 'E 不客气，还有不懂的吗？'], answer: 'D' },
+                { no: 59, type: 'mc5', part: 'reading', question: '因为我不知道怎么说。', options: ['A 我是4月1日到北京的，快三个月了。', 'B 再给我来一杯牛奶吧。', 'C 我还没告诉她这件事。', 'D 他在那儿和孩子们踢足球呢。', 'E 不客气，还有不懂的吗？'], answer: 'C' },
+                { no: 60, type: 'mc5', part: 'reading', question: '好的，这个有点儿热，你慢点儿喝。', options: ['A 我是4月1日到北京的，快三个月了。', 'B 再给我来一杯牛奶吧。', 'C 我还没告诉她这件事。', 'D 他在那儿和孩子们踢足球呢。', 'E 不客气，还有不懂的吗？'], answer: 'B' }
+            ];
+
+            // Fungsi pengacakan (Fisher-Yates)
+            function shuffleArray(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
+
+            // Salin dan acak setiap bagian
+            let listeningQuestions = shuffleArray([...rawListening]);
+            let readingQuestions = shuffleArray([...rawReading]);
+
+            // State jawaban per bagian (urutan sesuai acakan)
+            let listeningAnswers = new Array(listeningQuestions.length).fill(null);
+            let readingAnswers = new Array(readingQuestions.length).fill(null);
+            let listeningCurrent = 0;
+            let readingCurrent = 0;
+            let activeTab = 'listening'; // mulai dari listening
+
+            let testStarted = false;
+            let testFinished = false;
+            let userName = "Peserta";
+
+            // Timer global: 47 menit = 2820 detik
+            const TOTAL_GLOBAL_SECONDS = 47 * 60;
+            let globalTimeLeft = TOTAL_GLOBAL_SECONDS;
+            let perSoalTimeLeft = 60;
+
+            let globalTimerInterval = null;
+            let perSoalTimerInterval = null;
+
+            const container = document.getElementById('mainContainer');
+
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            function clearAllIntervals() {
+                if (globalTimerInterval) clearInterval(globalTimerInterval);
+                if (perSoalTimerInterval) clearInterval(perSoalTimerInterval);
+                globalTimerInterval = null;
+                perSoalTimerInterval = null;
+            }
+
+            // Mendapatkan data bagian aktif
+            function getCurrentData() {
+                if (activeTab === 'listening') {
+                    return {
+                        questions: listeningQuestions,
+                        answers: listeningAnswers,
+                        currentIdx: listeningCurrent,
+                        setAnswer: (idx, val) => { listeningAnswers[idx] = val; }
+                    };
+                } else {
+                    return {
+                        questions: readingQuestions,
+                        answers: readingAnswers,
+                        currentIdx: readingCurrent,
+                        setAnswer: (idx, val) => { readingAnswers[idx] = val; }
+                    };
+                }
+            }
+
+            // Simpan jawaban dari radio ke state (dipanggil saat change)
+            function saveCurrentAnswer(value) {
+                const data = getCurrentData();
+                if (data.currentIdx < data.questions.length) {
+                    data.setAnswer(data.currentIdx, value);
+                }
+            }
+
+            // Navigasi
+            function goToPrev() {
+                const data = getCurrentData();
+                if (data.currentIdx > 0) {
+                    if (activeTab === 'listening') {
+                        listeningCurrent--;
+                    } else {
+                        readingCurrent--;
+                    }
+                    perSoalTimeLeft = 60;
+                    renderSoal();
+                }
+            }
+
+            function goToNext() {
+                const data = getCurrentData();
+                if (data.currentIdx + 1 < data.questions.length) {
+                    if (activeTab === 'listening') {
+                        listeningCurrent++;
+                    } else {
+                        readingCurrent++;
+                    }
+                    perSoalTimeLeft = 60;
+                    renderSoal();
+                } else {
+                    // jika sudah di akhir bagian, coba pindah tab ke reading jika listening selesai
+                    if (activeTab === 'listening' && readingQuestions.length > 0) {
+                        activeTab = 'reading';
+                        perSoalTimeLeft = 60;
+                        renderSoal();
+                    }
+                    // jika reading sudah habis, mungkin tampilkan preview?
+                }
+            }
+
+            // Timer per soal habis
+            function perSoalWaktuHabis() {
+                if (testFinished) return;
+                goToNext();
+            }
+
+            function globalWaktuHabis() {
+                if (testFinished) return;
+                clearAllIntervals();
+                testFinished = true;
+                tampilkanPreview();
+            }
+
+            function startTimers() {
+                clearAllIntervals();
+
+                globalTimerInterval = setInterval(() => {
+                    if (testFinished) return;
+                    globalTimeLeft--;
+                    if (globalTimeLeft <= 0) {
+                        globalTimeLeft = 0;
+                        globalWaktuHabis();
+                    }
+                    const globalEl = document.getElementById('globalTimerDisplay');
+                    const perEl = document.getElementById('perSoalTimerDisplay');
+                    if (globalEl) globalEl.innerText = formatTime(globalTimeLeft);
+                    if (perEl) perEl.innerText = formatTime(perSoalTimeLeft);
+                }, 1000);
+
+                perSoalTimerInterval = setInterval(() => {
+                    if (testFinished) return;
+                    perSoalTimeLeft--;
+                    if (perSoalTimeLeft <= 0) {
+                        perSoalTimeLeft = 0;
+                        clearInterval(perSoalTimerInterval);
+                        perSoalTimerInterval = null;
+                        perSoalWaktuHabis();
+                    }
+                    const perEl = document.getElementById('perSoalTimerDisplay');
+                    if (perEl) perEl.innerText = formatTime(perSoalTimeLeft);
+                }, 1000);
+            }
+
+            function renderModal() {
+                container.innerHTML = `
+                    <div class="modal-start" id="modalStart">
+                        <div class="modal-card">
+                            <h2>🐱HSK 二级 模拟考试</h2>
+                            <p>by lcnpalembang-08994477998</p>
+                            <p>📋 Listening 15 soal • Reading 20 soal</p>
+                            <p>⏱ Total 47 menit | 60 detik per soal</p>
+                            <input type="text" id="usernameInput" placeholder="Masukkan nama kamu" value="${userName}">
+                            <button class="btn-start" id="btnStart">Mulai</button>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('btnStart').addEventListener('click', () => {
+                    const input = document.getElementById('usernameInput');
+                    if (input.value.trim() !== '') {
+                        userName = input.value.trim();
+                    } else {
+                        userName = '姓名';
+                    }
+                    document.getElementById('modalStart').style.display = 'none';
+                    startTest();
+                });
+            }
+
+            function startTest() {
+                testStarted = true;
+                testFinished = false;
+                // Reset jawaban
+                listeningAnswers.fill(null);
+                readingAnswers.fill(null);
+                listeningCurrent = 0;
+                readingCurrent = 0;
+                activeTab = 'listening';
+                globalTimeLeft = TOTAL_GLOBAL_SECONDS;
+                perSoalTimeLeft = 60;
+                renderSoal();
+                startTimers();
+            }
+
+            function renderSoal() {
+                const data = getCurrentData();
+                const q = data.questions[data.currentIdx];
+                if (!q) {
+                    tampilkanPreview();
+                    return;
+                }
+
+                let optionsHtml = '';
+                if (q.type === 'mc3' || q.type === 'mc5' || q.type === 'mc6') {
+                    q.options.forEach((opt, idx) => {
+                        const letter = opt.split(' ')[0];
+                        const checked = (data.answers[data.currentIdx] === letter) ? 'checked' : '';
+                        optionsHtml += `
+                            <div class="option-item" onclick="document.getElementById('opt_${activeTab}_${data.currentIdx}_${letter}').click();">
+                                <input type="radio" name="soal" id="opt_${activeTab}_${data.currentIdx}_${letter}" value="${letter}" ${checked}>
+                                <label for="opt_${activeTab}_${data.currentIdx}_${letter}">${opt}</label>
+                            </div>
+                        `;
+                    });
+                } else if (q.type === 'tf') {
+                    const checkedTrue = (data.answers[data.currentIdx] === '√') ? 'checked' : '';
+                    const checkedFalse = (data.answers[data.currentIdx] === '×') ? 'checked' : '';
+                    optionsHtml += `
+                        <div class="option-item" onclick="document.getElementById('opt_${activeTab}_${data.currentIdx}_√').click();">
+                            <input type="radio" name="soal" id="opt_${activeTab}_${data.currentIdx}_√" value="√" ${checkedTrue}>
+                            <label for="opt_${activeTab}_${data.currentIdx}_√">${q.options[0]}</label>
+                        </div>
+                        <div class="option-item" onclick="document.getElementById('opt_${activeTab}_${data.currentIdx}_×').click();">
+                            <input type="radio" name="soal" id="opt_${activeTab}_${data.currentIdx}_×" value="×" ${checkedFalse}>
+                            <label for="opt_${activeTab}_${data.currentIdx}_×">${q.options[1]}</label>
+                        </div>
+                    `;
+                }
+
+                const listeningCompleted = listeningCurrent >= listeningQuestions.length ? 'completed' : '';
+                const readingCompleted = readingCurrent >= readingQuestions.length ? 'completed' : '';
+
+                // Cek apakah semua soal sudah dijawab (untuk tampilkan tombol preview)
+                const allListeningAnswered = listeningAnswers.every(ans => ans !== null);
+                const allReadingAnswered = readingAnswers.every(ans => ans !== null);
+                const showPreviewButton = allListeningAnswered && allReadingAnswered;
+
+                container.innerHTML = `
+                    <div class="header">
+                        <div class="doraemon-icon"></div>
+                        <h1>HSK 2 • Doraemon</h1>
+                        <div style="width:50px;"></div>
+                    </div>
+                    <div class="username-display">👤 ${userName}</div>
+                    <div class="timer-panel">
+                        <span class="timer-item">⏳ Sisa: <span id="perSoalTimerDisplay">${formatTime(perSoalTimeLeft)}</span></span>
+                        <span class="timer-item">⌛ Total: <span id="globalTimerDisplay">${formatTime(globalTimeLeft)}</span></span>
+                    </div>
+                    <div class="tab-bar">
+                        <div class="tab ${activeTab === 'listening' ? 'active' : ''} ${listeningCompleted}" id="tabListening">👂 Listening ${listeningCurrent+1}/${listeningQuestions.length}</div>
+                        <div class="tab ${activeTab === 'reading' ? 'active' : ''} ${readingCompleted}" id="tabReading">📖 Reading ${readingCurrent+1}/${readingQuestions.length}</div>
+                    </div>
+                    <div class="progress-info">Soal ke-${data.currentIdx+1} dari ${data.questions.length}</div>
+                    <div class="question-box">
+                        <div class="question-text">${q.question.replace(/\n/g, '<br>')}</div>
+                        <div class="options" id="optionsContainer">
+                            ${optionsHtml}
+                        </div>
+                        <div class="nav-buttons">
+                            <button class="nav-btn" id="backBtn" ${data.currentIdx === 0 ? 'disabled' : ''}>◀ Back</button>
+                            <button class="nav-btn" id="nextBtn">Next ▶</button>
+                        </div>
+                    </div>
+                    ${showPreviewButton ? '<button class="btn-preview" id="previewBtn">📋 Lihat Preview & Hasil</button>' : ''}
+                    <div class="footer">🔔 Jangan nyontek, nanti kena rahasia Doraemon!</div>
+                `;
+
+                const radios = document.querySelectorAll('input[name="soal"]');
+                radios.forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        saveCurrentAnswer(e.target.value);
+                    });
+                });
+
+                document.getElementById('backBtn').addEventListener('click', goToPrev);
+                document.getElementById('nextBtn').addEventListener('click', goToNext);
+
+                document.getElementById('tabListening').addEventListener('click', () => {
+                    if (activeTab !== 'listening' && listeningQuestions.length > 0) {
+                        activeTab = 'listening';
+                        perSoalTimeLeft = 60;
+                        renderSoal();
+                    }
+                });
+                document.getElementById('tabReading').addEventListener('click', () => {
+                    if (activeTab !== 'reading' && readingQuestions.length > 0) {
+                        activeTab = 'reading';
+                        perSoalTimeLeft = 60;
+                        renderSoal();
+                    }
+                });
+
+                if (showPreviewButton) {
+                    document.getElementById('previewBtn').addEventListener('click', () => {
+                        clearAllIntervals();
+                        tampilkanPreview();
+                    });
+                }
+            }
+
+            function tampilkanPreview() {
+                testFinished = true;
+                clearAllIntervals();
+
+                // Gabungkan semua soal dengan jawaban
+                const allQuestions = [
+                    ...listeningQuestions.map((q, idx) => ({ ...q, userAnswer: listeningAnswers[idx], part: 'Listening' })),
+                    ...readingQuestions.map((q, idx) => ({ ...q, userAnswer: readingAnswers[idx], part: 'Reading' }))
+                ];
+
+                let previewHtml = '';
+                allQuestions.forEach((q, idx) => {
+                    const isCorrect = q.userAnswer === q.answer;
+                    const statusClass = isCorrect ? 'correct' : 'wrong';
+                    const jawabanUser = q.userAnswer ? q.userAnswer : '(tidak dijawab)';
+                    previewHtml += `
+                        <div class="preview-item ${statusClass}">
+                            <div class="preview-question">${q.part} ${q.no}: ${q.question.substring(0, 80)}...</div>
+                            <div class="preview-answer">Jawaban Anda: ${jawabanUser} | Kunci: ${q.answer}</div>
+                        </div>
+                    `;
+                });
+
+                const totalBenar = allQuestions.filter(q => q.userAnswer === q.answer).length;
+                const persen = (totalBenar / allQuestions.length * 100).toFixed(1);
+                const lulus = persen >= 90 ? '✅ LULUS' : '❌ TIDAK LULUS';
+
+                container.innerHTML = `
+                    <div class="header">
+                        <div class="doraemon-icon"></div>
+                        <h1>HSK 2 • Doraemon</h1>
+                        <div style="width:50px;"></div>
+                    </div>
+                    <div class="laporan">
+                        <h2>🎉 PREVIEW & HASIL</h2>
+                        <div style="font-size:2rem; margin:10px;">👤 ${userName}</div>
+                        <div class="skor">${persen}%</div>
+                        <div style="font-size:2rem; margin:10px;">${lulus}</div>
+                        <div class="detail">
+                            <div>👂 Listening<br>${listeningAnswers.filter((ans, i) => ans === listeningQuestions[i].answer).length}/${listeningQuestions.length}</div>
+                            <div>📖 Reading<br>${readingAnswers.filter((ans, i) => ans === readingQuestions[i].answer).length}/${readingQuestions.length}</div>
+                        </div>
+                        <div class="preview-grid">
+                            ${previewHtml}
+                        </div>
+                        <button class="btn-ulang" id="ulangBtn" style="margin-top:20px;">🔄 Coba Lagi</button>
+                    </div>
+                `;
+                document.getElementById('ulangBtn').addEventListener('click', () => {
+                    location.reload();
+                });
+            }
+
+            renderModal();
+        })();
+    </script>
+</body>
+</html>
